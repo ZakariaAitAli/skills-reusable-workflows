@@ -16,59 +16,49 @@ _Make a workflow reusable, call it in another workflow, and use a matrix strateg
 </header>
 
 <!--
-  <<< Author notes: Step 2 >>>
+  <<< Author notes: Step 3 >>>
   Start this step by acknowledging the previous step.
   Define terms and link to docs.github.com.
 -->
 
-## Step 2: Add a job to call the reusable workflow
+## Step 3: Add a matrix strategy to your workflow
 
-_Nice work! :tada: You made a workflow reusable!_
+_Well done! :sparkles:_
 
-Now that you have a reusable workflow, you can call it in another workflow within a new or existing job. But before we do that, let's take a minute to understand what our reusable workflow is doing by looking at the content of the file.
+Your **My Starter Workflow** now has a job that outputs the node version of 14 and calls the reusable workflow called **Reusable Workflow**. It then prints a message to the Actions logs of the node version for the build. Now, we haven't checked the Actions logs at the point to see the message, but don't worry, we'll get there after this next step. Let's improve our **My Starter Workflow** a little more but adding a matrix strategy.
 
-**Understanding the file contents of your reusable workflow**
+**What is a matrix strategy**: A matrix strategy lets you use variables in a single job definition to automatically create multiple job runs that are based on the combinations of the variables. For example, you can use a matrix strategy to test your code in multiple versions of a language or on multiple operating systems. Below is an example:
 
 ```yaml
-name: Reusable Workflow
-
-on:
-  workflow_call:
-    inputs:
-      node:
-        required: true
-        type: string
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Output the input value
-        run: |
-          echo "The node version to use is: ${{ inputs.node }}"
+  example_matrix:
+    strategy:
+      matrix:
+        version: [10, 12, 14]
+        os: [ubuntu-latest, windows-latest]
 ```
 
-The reusable workflow requires an `input` of `node` in order for the workflow to work. You need to make sure that the other workflow you are using to call this reusable workflow outputs a node version. If a node input is detected, the workflow will kick off a job called `build` that runs on ubuntu-latest.
+To define a matrix strategy inside a job, you first need to define the matrix with the keyword `strategy` followed by the nested keyword `matrix`. You can then define variables for the matrix. In the above example, the variables are `version` with the values of `10, 12, and 14`, and another variable called `os` with the values of `ubuntu-latest and windows latest`.
 
-The step within the `build` job uses an action called `checkout@v3` to checkout the code and then a step to output the input value by running an echo command to print to the Actions log console the following message, `The node version to use is: ${{ inputs.node }}`. The node input here is the output node value you need to have in your other workflow.
+The `example_matrix` job will run for each possible combination of the variables. So, in the above example, the workflow will run six jobs, one for each combination of the os and version variables. If you want to run a job for multiple versions, using a matrix strategy is a great solution over writing out 6 different jobs.
 
-Okay, now that we know what the reusable workflow is doing, let's now add a new job to another workflow called **my-starter-workflow** to call our reusable workflow. We can do this by using the `uses:` command and then setting the path to the workflow we want to use. We also need to make sure we define that node input or the reusable workflow won't work.
+Let's add a matrix strategy to the **My Starter Workflow** so we can run our job on different versions of node instead of the hard-coded single verison of 14.
 
-### :keyboard: Activity: Add a job to your workflow to call the reusable workflow
+### :keyboard: Activity: Use a matrix strategy to run multiple versions
 
-1. Navigate to the `.github/workflows/` folder and open the `my-starter-workflow.yml` file.
-1. Add a new job to the workflow called `call-reusable-workflow`.
-1. Add a `uses` command and path the command to the `reusable-workflow.yml` file.
-1. Add a `with` command to pass in a `node` paramater and set the value to `14`.
+1. In the same `my-starter-workflow.yml` file, add a `strategy` keyword under the `call-reusable-workflow` job.
+1. Under `strategy`, add a `matrix` keyword.
+1. Define the `nodeversion` variable to run over the following versions of node `[14, 16, 18, 20]`.
+1. Replace the hard-coded `node` paramter of 14 used in the `with` command, and call the `nodeversion` in the matrix by using the following syntax `${{ matrix.nodeversion }}`. Below is that your job should look like:
 
    ```yaml
    call-reusable-workflow:
+     strategy:
+       matrix:
+         nodeversion: [14, 16, 18, 20]
      uses: ./.github/workflows/reusable-workflow.yml
      with:
-       node: 14
+       node: ${{ matrix.nodeversion }}
    ```
 
 1. To commit your changes, click **Start commit**, and then **Commit changes**.
