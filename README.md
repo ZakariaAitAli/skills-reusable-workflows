@@ -16,24 +16,31 @@ _Make a workflow reusable, call it in another workflow, and use a matrix strateg
 </header>
 
 <!--
-  <<< Author notes: Step 4 >>>
+  <<< Author notes: Step 5 >>>
   Start this step by acknowledging the previous step.
   Define terms and link to docs.github.com.
 -->
 
-## Step 4: Merge your changes
+## Step 5: Trigger your workflow and view the Actions logs
 
-_Nicely done! :partying_face:_
+_You're almost done. Last step! :heart:_
 
-You've added a matrix strategy to your workflow file that is now running on four different versions of node `[14, 16, 18, 20]` instead of the single hard-coded version of only `14`.
+Now that the changes have been merged into the `main` branch, let's trigger the **My Starter Workflow** workflow to see everyting in action! But before we do, let's recall what we should expect to see before we run the workflow.
 
-We'll now merge your changes so that your workflow file changes will be part of the `main` branch.
+- We should expect to see five jobs running from our \*My Starter Workflow\*\*. Do you remember which ones? We have the `build` job and then the `call-reusable-workflow` job that has the matrix strategy.
+  ![Screen Shot 2022-09-08 at 9 53 52 AM](https://user-images.githubusercontent.com/6351798/189220189-97361a5e-eecf-4666-a859-e0587354bafe.png)
+- We should also expect to see the echo message printed as an output from the reusable workflow with the node version for each of the matrix version jobs.
+  ![Screen Shot 2022-09-08 at 9 52 41 AM](https://user-images.githubusercontent.com/6351798/189220620-0576540a-366f-44e1-866c-2955af399cdb.png)
 
-### :keyboard: Activity: Create and merge your pull request
+### :keyboard: Activity: Run the My Starter Workflow and view the Actions logs
 
-1. Merge your changes from `reusable-workflow` into `main`. If you created the pull request in step 1, open that PR and click on **Merge pull request**. If you did not create the pull request earlier, you can do it now by following the instructions in step 1.
-1. Optionally, click **Delete branch** to delete your `reusable-workflow` branch.
-1. Wait about 20 seconds for actions to run, then refresh this page (the one you're following instructions from) and an action will automatically close this step and open the next one.
+1. Navigate to the **Actions** tab in your repo.
+1. Choose the **My Starter Workflow** workflow from the left, and select the **Run workflow** button and run the workflow on the **Main** branch.
+1. Wait a few seconds for the workflow run to appear in the queue. Once it shows, select the **My Starter Workflow** from the workflow runs queue.
+
+Notice the list of build jobs on the left. One for the `build` job and four for the different node versions (14, 16, 18, 20) that you are running from your matrix. When one of the node version jobs complete, you can select that job and view the Actions logs for the **Output the input value**. This will print out the message from the reusable workflow file.
+
+When you're done reviewing the Actions logs, return here and refresh the page to finish the course! 🎉
 
 <footer>
 
